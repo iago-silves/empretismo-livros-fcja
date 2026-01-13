@@ -1,26 +1,17 @@
-# ==============================
-# Ambiente virtual
-# ==============================
+
 venv/
 .env/
 .venv/
 
-# ==============================
-# Cache do Python
-# ==============================
 __pycache__/
 *.py[cod]
 *$py.class
 
-# ==============================
-# Testes / cobertura
-# ==============================
 .coverage
 htmlcov/
 .pytest_cache/
 
-# ==============================
-# VS Code
-# ==============================
 .vscode/*
 !.vscode/extensions.json
+
+.biblioteca
