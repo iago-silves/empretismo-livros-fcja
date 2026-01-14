@@ -15,7 +15,7 @@ def setup_database():
     metadata.create_all(engine)
 
     TestingSessionLocal = sessionmaker(bind=engine)
-    database.SessionLocal = TestingSessionLocal  # 🔥 override global
+    database.SessionLocal = TestingSessionLocal  # override global
 
     yield
 

@@ -47,4 +47,5 @@ class Emprestimo:
     
     def __str__(self):
         return (f"Livro: {self.livro.titulo} | " f"Usuário: {self.usuario.nome} | " 
-                f"Devolução prevista: {self.data_prevista_devolucao.strftime('%d/%m/%Y')}")#perguntar a Karcia
+                f"Devolução prevista: {self.data_prevista_devolucao.strftime('%d/%m/%Y')}") # perguntar a Karcia
+    

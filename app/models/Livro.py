@@ -9,4 +9,4 @@ class Livro:
         self.observacao = observacao
     
     def __str__(self):
-        return f"{self.titulo}; {self.autor} ({self.ano})"#perguntar a Karcia
+        return f"{self.titulo}; {self.autor} ({self.ano})" # perguntar a Karcia
