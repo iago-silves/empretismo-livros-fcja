@@ -3,13 +3,9 @@ from app.models.usuario import Usuario
 from app.models.livro import Livro
 
 class Emprestimo:
-    limite_renovacao = 1 # perguntar a Karcia
     def __init__(self, usuario: Usuario, livro: Livro, prazo_dias: int):
         if usuario.bloqueado:
             raise Exception("Usuario bloqueado, não é possível realizar empréstimos.")
-        
-        if not livro.disponivel:
-            raise Exception("Livro indisponível para empréstimo.")
         
         if prazo_dias < 1:
             raise ValueError("O prazo do empréstimo deve ser maior que zero.")
@@ -21,7 +17,7 @@ class Emprestimo:
         self.data_prevista_devolucao = self.data_emprestimo + timedelta(days=prazo_dias)
         self.data_devolucao = None
         self.renovacoes = 0
-        self.livro.disponivel = False
+        self.exige_presenca_fisica = False
     
     def devolucao(self):
         if self.data_devolucao is not None:
@@ -40,13 +36,16 @@ class Emprestimo:
         if self.atrasado():
             raise Exception("Não é possível renovar um empréstimo em atraso.")
         
-        if self.renovacoes >= self.limite_renovacao:
-            raise Exception("Limite de renovações atingido.")
-        
         if dias < 15 or dias > 30:
             raise ValueError("O prazo de renovação deve ser entre 15 e 30 dias.")
         
-        self.data_prevista_devolucao += timedelta(days=dias)
+        nova_data_prevista = self.data_prevista_devolucao + timedelta(days=dias)
+        prazo_total = (nova_data_prevista - self.data_emprestimo).days
+
+        if prazo_total > 30:
+            self.exige_presenca_fisica = True
+
+        self.data_prevista_devolucao = nova_data_prevista 
         self.renovacoes += 1
 
     def atrasado(self) -> bool:
@@ -67,7 +66,13 @@ class Emprestimo:
         return datetime.now() >= self.data_prevista_devolucao - timedelta(days=dias)
     
     def __str__(self) -> str:
-        return (f"Livro: {self.livro.titulo} | " 
-                f"Usuário: {self.usuario.nome} | " 
-                f"Devolução prevista: {self.data_prevista_devolucao.strftime('%d/%m/%Y')}") # perguntar a Karcia
+        return (f"Usuário: {self.usuario.nome} | "
+                f"Título: {self.livro.titulo} | " 
+                f"Autor: {self.livro.autor} | "
+                f"Edição: {self.livro.edicao} | "
+                f"Editora: {self.livro.editora} | "
+                f"Local: {self.livro.local} | "
+                f"Origem: {self.livro.origem} | "
+                f"Observação: {self.livro.observacao}"
+                f"Devolução prevista: {self.data_prevista_devolucao.strftime('%d/%m/%Y')}")
     
