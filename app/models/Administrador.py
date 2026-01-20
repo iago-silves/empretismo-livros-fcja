@@ -4,6 +4,7 @@ from app.models.pessoa import Pessoa
 
 class Administrador(Pessoa):
     def __init__(self, nome, email, senha_hash, ativo=True, criado_em=None, ultimo_login=None):
+        self.id = None
         super().__init__(nome, email)
         self.senha_hash = senha_hash
         self.ativo = ativo

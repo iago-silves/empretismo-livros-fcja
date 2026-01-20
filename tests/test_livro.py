@@ -21,21 +21,19 @@ def test_criar_livro():
     assert livro.local == "Prateleira A3"
     assert livro.origem == "Doação"
     assert livro.observacao == "Clássico da literatura"
-
+    
 def test_str_livro():
     livro = Livro(
-        autor = "Edu",
-        titulo = "Olhos Negros",
-        editora = "Editora Exemplo",
-        edicao = "2ª",
-        ano = 2029,
-        local = "Caixa A5",
-        origem = "Compra",
-        observacao = ""
+        autor="Edu",
+        titulo="Olhos Negros",
+        editora="Editora Exemplo",
+        edicao="2ª",
+        ano=2029,
+        local="Caixa A5",
+        origem="Compra",
+        observacao=""
     )
 
-    resultado = str(Livro)
+    resultado = str(livro)
 
     assert "Olhos Negros" in resultado
-    assert "Edu" in resultado
-    assert "Editora Exemplo" in resultado

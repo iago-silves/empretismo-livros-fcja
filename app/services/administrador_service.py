@@ -1,6 +1,8 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app.infra.database import SessionLocal
+from app.infra.tables.emprestimo_table import emprestimos_table
+
 from app.models.administrador import Administrador
 from app.models.usuario import Usuario
 from app.models.livro import Livro
@@ -79,14 +81,18 @@ class AdministradorService:
     def quantidade_emprestimos_ativos(usuario: Usuario, session=None) -> int:
         session = session or SessionLocal()
 
-        return session.query(Emprestimo).filter(
-            Emprestimo.usuario_id == usuario.id,
-            Emprestimo.data_devolucao.is_(None)
+        return session.query(emprestimos_table).filter(
+            emprestimos_table.c.usuario_id == usuario.id,
+            emprestimos_table.c.data_devolucao.is_(None)
         ).count()
     
     @staticmethod
     def autorizar_emprestimo(usuario: Usuario, livro: Livro, prazo_dias: int, session=None):
         session = session or SessionLocal()
+
+        if usuario.id is None or livro.id is None:
+            raise ValueError("Usuário e livro precisam estar cadastrados no banco")
+
 
         if usuario.bloqueado:
             raise ValueError("Usuário bloqueado")
