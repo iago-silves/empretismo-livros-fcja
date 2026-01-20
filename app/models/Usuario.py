@@ -2,7 +2,7 @@ from app.models.pessoa import Pessoa
 
 class Usuario(Pessoa):
     def __init__(self, nome: str, email: str, telefone: str, endereco: str):
-        self.id = None
+        self.id: int | None = None
         super().__init__(nome, email)
         self.telefone = telefone
         self.endereco = endereco

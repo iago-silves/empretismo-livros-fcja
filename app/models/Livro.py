@@ -1,7 +1,7 @@
 class Livro:
     def __init__(self, autor: str, titulo: str, editora: str, edicao: str,
                  ano: int, local: str, origem: str, observacao: str = ""):
-        self.id = None
+        self.id: int | None = None  
         self.autor = autor
         self.titulo = titulo
         self.editora = editora
