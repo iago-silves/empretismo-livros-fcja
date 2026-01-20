@@ -67,7 +67,9 @@ def test_devolucao_ja_realizada(usuario, livro):
     assert "já foi encerrado" in str(excinfo.value)
 
 def test_emprestimo_atrasado(usuario, livro):
-    e = EmprestimoDominio(usuario, livro, prazo_dias=-1)  # data prevista no passado
+    e = EmprestimoDominio(usuario, livro, prazo_dias=1)
+    e.data_prevista_devolucao = e.data_emprestimo - timedelta(days=1)
+
     assert e.atrasado() is True
 
 def test_renovacao_valida(usuario, livro):
@@ -96,9 +98,12 @@ def test_prazo_de_vencimento(usuario, livro):
     assert isinstance(e.prazo_de_vencimento(), bool)
 
 def test_bloqueio_usuario_por_atraso(usuario, livro):
-    e = EmprestimoDominio(usuario, livro, prazo_dias=-1)
+    e = EmprestimoDominio(usuario, livro, prazo_dias=1)
+    e.data_prevista_devolucao = e.data_emprestimo - timedelta(days=1)
+
     e.verificar_bloqueio()
     assert usuario.bloqueado is True
+
 
 def test_str_emprestimo(usuario, livro):
     e = EmprestimoDominio(usuario, livro, prazo_dias=7)
