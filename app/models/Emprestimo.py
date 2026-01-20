@@ -9,9 +9,12 @@ class Emprestimo:
         
         if prazo_dias < 1:
             raise ValueError("O prazo do empréstimo deve ser maior que zero.")
-
+        
+        self.id = None
         self.usuario = usuario
+        self.usuario_id = usuario.id
         self.livro = livro
+        self.livro_id = livro.id
         self.data_emprestimo = datetime.now()
         self.prazo_dias = prazo_dias 
         self.data_prevista_devolucao = self.data_emprestimo + timedelta(days=prazo_dias)
@@ -24,7 +27,6 @@ class Emprestimo:
             raise Exception("Este empréstimo já foi encerrado.")
         
         self.data_devolucao = datetime.now()
-        self.livro.disponivel = True
 
         if self.atrasado():
             self.usuario.bloqueado = True
