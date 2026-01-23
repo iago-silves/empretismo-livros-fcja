@@ -1,6 +1,9 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app.infra.database import SessionLocal
+from sqlalchemy import select, insert
+
+from app.infra.tables.adm_table import administradores_table
 from app.infra.tables.emprestimo_table import emprestimos_table
 
 from app.models.administrador import Administrador
@@ -14,17 +17,26 @@ class AdministradorService:
     def cadastrar_adm(nome, email, senha, session=None):
         session = session or SessionLocal()
 
-        if session.query(Administrador).filter_by(email=email).first():
+        stmt = select(administradores_table).where(administradores_table.c.email == email)
+
+        if session.execute(stmt).first():
             raise ValueError("Erro: Administrador já cadrastado!")
 
         senha_hash = generate_password_hash(senha)
-        admin = Administrador(nome, email, senha_hash)
+        
+        stmt = insert(administradores_table).values(
+            nome = nome,
+            email = email,
+            senha_hash = senha_hash
+        )
 
-        session.add(admin)
+        resultado = session.execute(stmt)
         session.commit()
-        session.refresh(admin)
 
-        return admin
+        return {
+            "nome": nome,
+            "email": email
+        }
 
     @staticmethod
     def autenticar_adm(email, senha, session=None):
