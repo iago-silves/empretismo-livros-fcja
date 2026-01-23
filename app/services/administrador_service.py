@@ -42,12 +42,31 @@ class AdministradorService:
     def autenticar_adm(email, senha, session=None):
         session = session or SessionLocal()
 
-        admin = session.query(Administrador).filter_by(email=email).first()
-        if not admin:
-            return None
+        stmt = select(administradores_table).where(
+            administradores_table.c.email == email
+            )
+        
+        resultado = session.execute(stmt).first()
 
-        if not check_password_hash(admin.senha_hash, senha):
+        if not resultado:
             return None
+        
+        row = resultado._mapping
+
+        admin = Administrador(
+            nome=row["nome"],
+            email=row["email"],
+            senha_hash=row["senha_hash"],
+        )
+
+        admin.id = row["id"]
+        admin.ativo = row["ativo"]
+
+        if not admin.verificar_senha(senha):
+            return None
+        
+        admin.registrar_login()
+        session.commit()
 
         return admin
 
