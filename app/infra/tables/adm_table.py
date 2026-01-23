@@ -1,5 +1,6 @@
 from sqlalchemy import Table, Column, Integer, String, Boolean, DateTime
 from app.infra.database import metadata
+from datetime import datetime
 
 administradores_table = Table(
     "administradores",
@@ -9,6 +10,10 @@ administradores_table = Table(
     Column("email", String(120), unique=True, nullable=False),
     Column("senha_hash", String(255), nullable=False),
     Column("ativo", Boolean, default=True),
-    Column("criado_em", DateTime, nullable=False),
-    Column("ultimo_login", DateTime, nullable=True),
+    Column(
+        "crieado_em",
+        DateTime,
+        nullable=False,
+        default=datetime.utcnow
+    )
 )

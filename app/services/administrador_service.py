@@ -1,6 +1,9 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app.infra.database import SessionLocal
+from sqlalchemy import select, insert
+
+from app.infra.tables.adm_table import administradores_table
 from app.infra.tables.emprestimo_table import emprestimos_table
 
 from app.models.administrador import Administrador
@@ -14,28 +17,56 @@ class AdministradorService:
     def cadastrar_adm(nome, email, senha, session=None):
         session = session or SessionLocal()
 
-        if session.query(Administrador).filter_by(email=email).first():
+        stmt = select(administradores_table).where(administradores_table.c.email == email)
+
+        if session.execute(stmt).first():
             raise ValueError("Erro: Administrador já cadrastado!")
 
         senha_hash = generate_password_hash(senha)
-        admin = Administrador(nome, email, senha_hash)
+        
+        stmt = insert(administradores_table).values(
+            nome = nome,
+            email = email,
+            senha_hash = senha_hash
+        )
 
-        session.add(admin)
+        resultado = session.execute(stmt)
         session.commit()
-        session.refresh(admin)
 
-        return admin
+        return {
+            "nome": nome,
+            "email": email
+        }
 
     @staticmethod
     def autenticar_adm(email, senha, session=None):
         session = session or SessionLocal()
 
-        admin = session.query(Administrador).filter_by(email=email).first()
-        if not admin:
-            return None
+        stmt = select(administradores_table).where(
+            administradores_table.c.email == email
+            )
+        
+        resultado = session.execute(stmt).first()
 
-        if not check_password_hash(admin.senha_hash, senha):
+        if not resultado:
             return None
+        
+        row = resultado._mapping
+
+        admin = Administrador(
+            nome=row["nome"],
+            email=row["email"],
+            senha_hash=row["senha_hash"],
+        )
+
+        admin.id = row["id"]
+        admin.ativo = row["ativo"]
+
+        if not admin.verificar_senha(senha):
+            return None
+        
+        admin.registrar_login()
+        session.commit()
 
         return admin
 
