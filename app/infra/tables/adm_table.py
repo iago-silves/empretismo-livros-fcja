@@ -10,10 +10,5 @@ administradores_table = Table(
     Column("email", String(120), unique=True, nullable=False),
     Column("senha_hash", String(255), nullable=False),
     Column("ativo", Boolean, default=True),
-    Column(
-        "crieado_em",
-        DateTime,
-        nullable=False,
-        default=datetime.utcnow
-    )
+    Column("criado_em", DateTime, nullable=False, default=datetime.utcnow)
 )
