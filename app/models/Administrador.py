@@ -7,7 +7,7 @@ class Administrador(Pessoa):
         self.id: int | None = None
         super().__init__(nome, email)
         self.senha_hash = senha_hash
-        self.ativo = True
+        self.ativo = False
         self.criado_em = criado_em or datetime.utcnow()
         self.ultimo_login = ultimo_login
 

@@ -1,7 +1,9 @@
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import generate_password_hash
 
 from app.infra.database import SessionLocal
-from sqlalchemy import select, insert
+from sqlalchemy import select, insert, update
+
+from datetime import datetime
 
 from app.infra.tables.adm_table import administradores_table
 from app.infra.tables.emprestimo_table import emprestimos_table
@@ -30,7 +32,7 @@ class AdministradorService:
             senha_hash = senha_hash
         )
 
-        resultado = session.execute(stmt)
+        session.execute(stmt)
         session.commit()
 
         return {
@@ -65,8 +67,20 @@ class AdministradorService:
         if not admin.verificar_senha(senha):
             return None
         
-        admin.registrar_login()
+        update_stmt = (
+            update(administradores_table)
+            .where(administradores_table.c.id == admin.id)
+            .values(
+                ativo=True,
+                ultimo_login=datetime.utcnow()
+            )
+        )
+
+        session.execute(update_stmt)
         session.commit()
+
+        admin.ativar()
+        admin.registrar_login()
 
         return admin
 
