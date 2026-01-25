@@ -79,9 +79,6 @@ class AdministradorService:
         session.execute(update_stmt)
         session.commit()
 
-        admin.ativar()
-        admin.registrar_login()
-
         return admin
 
     @staticmethod
