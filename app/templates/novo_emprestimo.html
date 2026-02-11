@@ -1,0 +1,74 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="page-container">
+  <div class="page-header">
+    <h1>Novo Empréstimo</h1>
+
+    <div class="header-buttons">
+      <button class="btn-cancelar">Cancelar</button>
+      <button class="btn-salvar">Salvar</button>
+    </div>
+  </div>
+
+  <div class="section-title">
+    <h2>Dados do Livro</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <form class="form-emprestimo">
+    <!-- LINHA 1 -->
+    <div class="form-row">
+      <div class="form-group large">
+        <label>Título</label>
+        <input type="text" />
+      </div>
+
+      <div class="form-group large">
+        <label>Autor</label>
+        <input type="text" />
+      </div>
+    </div>
+
+    <!-- LINHA 2 -->
+    <div class="form-row">
+      <div class="form-group small">
+        <label>Edição</label>
+        <input type="text" />
+      </div>
+
+      <div class="form-group large">
+        <label>Editora</label>
+        <input type="text" />
+      </div>
+
+      <div class="form-group medium">
+        <label>Local</label>
+        <input type="text" />
+      </div>
+
+      <div class="form-group medium">
+        <label>Origem</label>
+        <input type="text" />
+      </div>
+
+      <div class="form-group small">
+        <label>Ano</label>
+        <input type="number" />
+      </div>
+    </div>
+
+    <!-- OBSERVAÇÃO -->
+    <div class="form-group textarea-group">
+      <label>Observação</label>
+      <textarea></textarea>
+    </div>
+
+    <!-- PRAZO -->
+    <div class="form-group prazo-group">
+      <label>Definir Prazo Devolução</label>
+      <input type="date" />
+    </div>
+  </form>
+</div>
+
+{% endblock %}

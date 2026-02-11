@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}Biblioteca{% endblock %}</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body>
+    <header class="header">
+      <img
+        src="{{ url_for('static', filename='img/logo.png') }}"
+        alt="Logo"
+        class="logo"
+      />
+
+      <div class="header-text">
+        <h1>BIBLIOTECA</h1>
+        <h2>DURMEVAL TRIGUEIRO MENDES</h2>
+        <p>EMPRÉSTIMO · CADASTRO</p>
+      </div>
+    </header>
+
+    <nav class="navbar">
+      <a href="#">Empréstimos</a>
+      <a href="#">Cadastro de Usuário</a>
+      <a href="#" class="active">Listagem de Usuários</a>
+    </nav>
+
+    <main class="content">{% block content %}{% endblock %}</main>
+  </body>
+</html>

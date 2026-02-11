@@ -1,0 +1,160 @@
+{% extends "base.html" %} {% block title %}Listagem de Empréstimos{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h2>Listagem de Empréstimos</h2>
+
+  <input type="text" placeholder="Pesquisar por..." class="search-input" />
+</div>
+
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Título</th>
+      <th>Autor</th>
+      <th>Prazo</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <!--Exemplo -->
+    <tr>
+      <td>Eduardo Barbosa de França</td>
+      <td>O Livro dos Cinco Anéis</td>
+      <td>Miyamoto Musashi</td>
+      <td>10/02/2026</td>
+      <td>
+        <button class="details-btn" onclick="openModal()">👁</button>
+      </td>
+    </tr>
+
+    {# {% for emprestimo in emprestimos %}
+    <tr>
+      <td>{{ emprestimo.usuario.nome }}</td>
+      <td>{{ emprestimo.livro.titulo }}</td>
+      <td>{{ emprestimo.livro.autor }}</td>
+      <td>{{ emprestimo.prazo }}</td>
+      <td>
+        <button class="details-btn" onclick="openModal({{ emprestimo.id }})">
+          👁
+        </button>
+      </td>
+    </tr>
+    {% endfor %} #}
+  </tbody>
+</table>
+
+<div class="pagination">
+  <button>&larr;</button>
+  <button>&rarr;</button>
+</div>
+
+<!--Modal-->
+
+<div id="modal" class="modal">
+  <div class="modal-content modal-large">
+    <div class="modal-header">
+      <h2>Detalhes do Empréstimo</h2>
+      <button class="exit-btn" onclick="closeModal()">Sair</button>
+    </div>
+
+    <h3>Dados</h3>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Nome Completo</label>
+        <input type="text" value="Eduardo Barbosa de França" readonly />
+      </div>
+
+      <div class="form-group">
+        <label>E-mail</label>
+        <input type="text" value="exemplo@gmail.com" readonly />
+      </div>
+
+      <div class="form-group">
+        <label>Telefone</label>
+        <input type="text" value="(83) 12345-6789" readonly />
+      </div>
+
+      <div class="form-group">
+        <label>Endereço</label>
+        <input type="text" value="Rua Nelly Pessoa de Lima, 82" readonly />
+      </div>
+
+      <div class="form-group small">
+        <label>Tipo</label>
+        <input type="text" value="Executivo" readonly />
+      </div>
+
+      <div class="form-group small">
+        <label>Setor</label>
+        <input type="text" value="R.H" readonly />
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Título</label>
+        <input type="text" value="O Livro dos Cinco Anéis" readonly />
+      </div>
+
+      <div class="form-group">
+        <label>Autor</label>
+        <input type="text" value="Miyamoto Musashi" readonly />
+      </div>
+
+      <div class="form-group small">
+        <label>Edição</label>
+        <input type="text" value="1ª" readonly />
+      </div>
+
+      <div class="form-group">
+        <label>Editora</label>
+        <input type="text" value="Jardim dos Livros" readonly />
+      </div>
+
+      <div class="form-group small">
+        <label>Local</label>
+        <input type="text" value="Caixa A3" readonly />
+      </div>
+
+      <div class="form-group small">
+        <label>Origem</label>
+        <input type="text" value="Doação" readonly />
+      </div>
+
+      <div class="form-group small">
+        <label>Ano</label>
+        <input type="text" value="2010" readonly />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Observação</label>
+      <textarea rows="6" readonly>
+fgsdasdfhgaidfbgaildufuhbilaudfbhliadfbhkliadfghiluadfghugadfkuhglaudfghiluadfghiugadfi
+            </textarea
+      >
+    </div>
+
+    <div class="form-group prazo">
+      <label>Definir Prazo Devolução</label>
+      <input type="text" value="10/02/2026" readonly />
+    </div>
+  </div>
+</div>
+
+<script>
+  function openModal() {
+    document.getElementById("modal").style.display = "flex";
+  }
+
+  function closeModal() {
+    document.getElementById("modal").style.display = "none";
+  }
+</script>
+
+{% endblock %}
