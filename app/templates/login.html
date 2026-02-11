@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login | Biblioteca Durmeval Trigueiro Mendes</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <link rel="stylesheet" href="../static/css/style.css" />
+  </head>
+  <body>
+    <header class="header">
+      <img
+        src="{{ url_for('static', filename='img/logo.png') }}"
+        alt="Logo da Biblioteca"
+        class="logo"
+      />
+
+      <div class="header-text">
+        <h1>BIBLIOTECA</h1>
+        <h2>DURMEVAL TRIGUEIRO MENDES</h2>
+        <p>EMPRÉSTIMO · CADASTRO</p>
+      </div>
+    </header>
+
+    <main class="login-container">
+      <div class="login-card">
+        <h3>Login</h3>
+
+        <form method="POST" action="{{ url_for('login') }}">
+          <input type="email" name="email" placeholder="E-mail" required />
+
+          <input type="password" name="senha" placeholder="Senha" required />
+
+          <a href="#" class="forgot-password">Esqueci minha senha</a>
+
+          <button type="submit">Entrar</button>
+        </form>
+
+        <a href="#" class="register-link">Cadastre-se</a>
+      </div>
+    </main>
+  </body>
+</html>

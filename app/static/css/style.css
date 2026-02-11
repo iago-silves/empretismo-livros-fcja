@@ -1,0 +1,110 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background-color: #e6e6e6;
+    min-height: 100vh;
+}
+
+/*Header*/
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 40px 60px;
+}
+
+.logo {
+    width: 120px;
+    height: auto;
+}
+
+.header-text h1 {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.header-text h2 {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.header-text p {
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/*Login*/
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-card {
+    background-color: #7b1e16;
+    width: 350px;
+    padding: 40px 30px;
+    border-radius: 12px;
+    color: white;
+    text-align: center;
+}
+
+.login-card h3 {
+    font-size: 22px;
+    margin-bottom: 25px;
+}
+
+.login-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.login-card input {
+    padding: 10px 12px;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+    font-size: 14px;
+}
+
+.forgot-password {
+    font-size: 12px;
+    color: white;
+    text-align: right;
+    text-decoration: none;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+.login-card button {
+    margin-top: 20px;
+    background-color: #e02b20;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.login-card button:hover {
+    background-color: #c9251c;
+}
+
+.register-link {
+    display: block;
+    margin-top: 20px;
+    font-size: 13px;
+    color: white;
+    text-decoration: underline;
+}
