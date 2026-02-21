@@ -2,7 +2,10 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <title>{% block title %}Biblioteca{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      {% block title %}Biblioteca - Sistema Empréstimo{% endblock %}
+    </title>
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/style.css') }}"
@@ -12,23 +15,36 @@
     <header class="header">
       <img
         src="{{ url_for('static', filename='img/logo.png') }}"
-        alt="Logo"
+        alt="Logo da Biblioteca Durmeval Trigueiro Mendes"
         class="logo"
       />
-
       <div class="header-text">
         <h1>BIBLIOTECA</h1>
         <h2>DURMEVAL TRIGUEIRO MENDES</h2>
-        <p>EMPRÉSTIMO · CADASTRO</p>
+        <span class="subtitle">EMPRÉSTIMO · CADASTRO</span>
       </div>
     </header>
 
     <nav class="navbar">
-      <a href="#">Empréstimos</a>
-      <a href="#">Cadastro de Usuário</a>
-      <a href="#" class="active">Listagem de Usuários</a>
+      <a
+        href="{{ url_for('emprestimos') }}"
+        class="{% if active_page == 'emprestimos' %}active{% endif %}"
+      >
+        Empréstimos
+      </a>
+      <a
+        href="{{ url_for('cadastro_usuario') }}"
+        class="{% if active_page == 'cadastro_usuario' %}active{% endif %}"
+      >
+        Cadastro de Usuário
+      </a>
+      <a
+        href="{{ url_for('usuarios') }}"
+        class="{% if active_page == 'usuarios' %}active{% endif %}"
+      >
+        Listagem de Usuários
+      </a>
     </nav>
-
     <main class="content">{% block content %}{% endblock %}</main>
   </body>
 </html>
