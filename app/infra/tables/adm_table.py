@@ -9,11 +9,7 @@ administradores_table = Table(
     Column("nome", String(100), nullable=False),
     Column("email", String(120), unique=True, nullable=False),
     Column("senha_hash", String(255), nullable=False),
-    Column("ativo", Boolean, default=True),
-    Column(
-        "crieado_em",
-        DateTime,
-        nullable=False,
-        default=datetime.utcnow
-    )
+    Column("ativo", Boolean, default=False),
+    Column("criado_em", DateTime, nullable=False, default=datetime.utcnow()),
+    Column("ultimo_login", DateTime, nullable=True)
 )
