@@ -1,0 +1,16 @@
+{% extends "base.html" %} {% block title %}Cadastro | Biblioteca Durmeval
+Trigueiro Mendes{% endblock %} {% block content %}
+<main class="login-container">
+  <div class="login-card">
+    <h3>Cadastre-se</h3>
+
+    <form method="POST" action="{{ url_for('cadastrar_admin') }}">
+      <input type="text" name="nome" placeholder="Nome" required />
+
+      <input type="email" name="email" placeholder="E-mail" required />
+
+      <button type="submit">Cadastrar</button>
+    </form>
+  </div>
+</main>
+{% endblock %}

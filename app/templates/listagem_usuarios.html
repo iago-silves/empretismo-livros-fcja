@@ -1,0 +1,58 @@
+{% extends "base.html" %} {% block title %}Listagem de Usuários{% endblock %} {%
+block content %}
+
+<div class="page-header">
+  <h2>Listagem de Usuários</h2>
+
+  <input type="text" placeholder="Pesquisar por..." class="search-input" />
+</div>
+
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>E-mail</th>
+      <th>Telefone</th>
+      <th>Endereço</th>
+      <th>Setor</th>
+      <th>Tipo</th>
+      <th>Ação</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <!-- Exemplo estático -->
+    <tr>
+      <td>Eduardo Barbosa de França</td>
+      <td>exemplo@gmail.com</td>
+      <td>(83) 12345-6789</td>
+      <td>Rua Nelly Pessoa de Lima, 82</td>
+      <td>TI</td>
+      <td>Aluno</td>
+      <td>
+        <button class="btn small">Registrar Empréstimo</button>
+      </td>
+    </tr>
+
+    {# {% for usuario in usuarios %}
+    <tr>
+      <td>{{ usuario.nome }}</td>
+      <td>{{ usuario.email }}</td>
+      <td>{{ usuario.telefone }}</td>
+      <td>{{ usuario.endereco }}</td>
+      <td>{{ usuario.setor }}</td>
+      <td>{{ usuario.tipo }}</td>
+      <td>
+        <button class="btn small">Registrar Empréstimo</button>
+      </td>
+    </tr>
+    {% endfor %} #}
+  </tbody>
+</table>
+
+<div class="pagination">
+  <button class="btn small">&larr;</button>
+  <button class="btn small">&rarr;</button>
+</div>
+
+{% endblock %}
