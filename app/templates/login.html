@@ -1,44 +1,19 @@
-<!doctype html>
-<html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Login | Biblioteca Durmeval Trigueiro Mendes</title>
+{% extends "base.html" %} {% block title %}Login | Biblioteca Durmeval Trigueiro
+Mendes{% endblock %} {% block content %}
 
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/style.css') }}"
-    />
-    <link rel="stylesheet" href="../static/css/style.css" />
-  </head>
-  <body>
-    <header class="header">
-      <img
-        src="{{ url_for('static', filename='img/logo.png') }}"
-        alt="Logo da Biblioteca"
-        class="logo"
-      />
+<main class="login-container">
+  <div class="login-card">
+    <h3>Login</h3>
 
-      <div class="header-text">
-        <h1>BIBLIOTECA</h1>
-        <h2>DURMEVAL TRIGUEIRO MENDES</h2>
-        <p>EMPRÉSTIMO · CADASTRO</p>
-      </div>
-    </header>
+    <form method="POST" action="{{ url_for('login') }}">
+      <input type="email" name="email" placeholder="E-mail" required />
 
-    <main class="login-container">
-      <div class="login-card">
-        <h3>Login</h3>
+      <input type="password" name="senha" placeholder="Senha" required />
 
-        <form method="POST" action="{{ url_for('login') }}">
-          <input type="email" name="email" placeholder="E-mail" required />
+      <a href="#" class="forgot-password">Esqueci minha senha</a>
 
-          <input type="password" name="senha" placeholder="Senha" required />
-
-          <a href="#" class="forgot-password">Esqueci minha senha</a>
-
-          <button type="submit">Entrar</button>
-        </form>
-      </div>
-    </main>
-  </body>
-</html>
+      <button type="submit">Entrar</button>
+    </form>
+  </div>
+</main>
+{% endblock %}

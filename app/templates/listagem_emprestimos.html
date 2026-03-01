@@ -3,7 +3,6 @@
 
 <div class="page-header">
   <h2>Listagem de Empréstimos</h2>
-
   <input type="text" placeholder="Pesquisar por..." class="search-input" />
 </div>
 
@@ -17,15 +16,16 @@
       <th></th>
     </tr>
   </thead>
+
   <tbody>
-    <!--Exemplo -->
+    <!-- Exemplo estático -->
     <tr>
       <td>Eduardo Barbosa de França</td>
       <td>O Livro dos Cinco Anéis</td>
       <td>Miyamoto Musashi</td>
       <td>10/02/2026</td>
       <td>
-        <button class="details-btn" onclick="openModal()">👁</button>
+        <button class="btn small" onclick="openModal()">👁</button>
       </td>
     </tr>
 
@@ -36,7 +36,7 @@
       <td>{{ emprestimo.livro.autor }}</td>
       <td>{{ emprestimo.prazo }}</td>
       <td>
-        <button class="details-btn" onclick="openModal({{ emprestimo.id }})">
+        <button class="btn small" onclick="openModal({{ emprestimo.id }})">
           👁
         </button>
       </td>
@@ -46,17 +46,17 @@
 </table>
 
 <div class="pagination">
-  <button>&larr;</button>
-  <button>&rarr;</button>
+  <button class="btn small">&larr;</button>
+  <button class="btn small">&rarr;</button>
 </div>
 
-<!--Modal-->
+<!-- Modal -->
 
 <div id="modal" class="modal">
   <div class="modal-content modal-large">
     <div class="modal-header">
       <h2>Detalhes do Empréstimo</h2>
-      <button class="exit-btn" onclick="closeModal()">Sair</button>
+      <button class="btn small" onclick="closeModal()">Sair</button>
     </div>
 
     <h3>Dados</h3>
@@ -136,12 +136,11 @@
       <label>Observação</label>
       <textarea rows="6" readonly>
 fgsdasdfhgaidfbgaildufuhbilaudfbhliadfbhkliadfghiluadfghugadfkuhglaudfghiluadfghiugadfi
-            </textarea
-      >
+      </textarea>
     </div>
 
     <div class="form-group prazo">
-      <label>Definir Prazo Devolução</label>
+      <label>Prazo de Devolução</label>
       <input type="text" value="10/02/2026" readonly />
     </div>
   </div>
@@ -149,11 +148,11 @@ fgsdasdfhgaidfbgaildufuhbilaudfbhliadfbhkliadfghiluadfghugadfkuhglaudfghiluadfgh
 
 <script>
   function openModal() {
-    document.getElementById("modal").style.display = "flex";
+    document.getElementById("modal").classList.add("show");
   }
 
   function closeModal() {
-    document.getElementById("modal").style.display = "none";
+    document.getElementById("modal").classList.remove("show");
   }
 </script>
 

@@ -19,6 +19,7 @@ block content %}
       <th>Ação</th>
     </tr>
   </thead>
+
   <tbody>
     <!-- Exemplo estático -->
     <tr>
@@ -26,23 +27,32 @@ block content %}
       <td>exemplo@gmail.com</td>
       <td>(83) 12345-6789</td>
       <td>Rua Nelly Pessoa de Lima, 82</td>
+      <td>TI</td>
+      <td>Aluno</td>
       <td>
-        <button class="action-btn">Registrar Empréstimo</button>
+        <button class="btn small">Registrar Empréstimo</button>
       </td>
     </tr>
 
-    <!-- Depois isso vira um for em Jinja -->
     {# {% for usuario in usuarios %}
     <tr>
-      ...
+      <td>{{ usuario.nome }}</td>
+      <td>{{ usuario.email }}</td>
+      <td>{{ usuario.telefone }}</td>
+      <td>{{ usuario.endereco }}</td>
+      <td>{{ usuario.setor }}</td>
+      <td>{{ usuario.tipo }}</td>
+      <td>
+        <button class="btn small">Registrar Empréstimo</button>
+      </td>
     </tr>
     {% endfor %} #}
   </tbody>
 </table>
 
 <div class="pagination">
-  <button>&larr;</button>
-  <button>&rarr;</button>
+  <button class="btn small">&larr;</button>
+  <button class="btn small">&rarr;</button>
 </div>
 
 {% endblock %}
