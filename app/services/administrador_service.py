@@ -214,6 +214,48 @@ class AdministradorService:
 
         session.execute(stmt)
         session.commit()
+    
+    @staticmethod
+    def cadastrar_livro(
+        autor: str,
+        titulo: str,
+        editora: str,
+        edicao: str,
+        ano: int,
+        local: str,
+        origem: str,
+        observacao: str,
+        session=None
+    ):
+        session = session or SessionLocal()
+
+        if not autor or not titulo:
+            raise ValueError("Autor e título são obrigatórios")
+
+        stmt = (
+            insert(livros_table)
+            .values(
+                autor=autor,
+                titulo=titulo,
+                editora=editora,
+                edicao=edicao,
+                ano=ano,
+                local=local,
+                origem=origem,
+                observacao=observacao
+            )
+            .returning(livros_table.c.id)
+        )
+
+        result = session.execute(stmt)
+        livro_id = result.scalar_one()
+
+        session.commit()
+
+        return {
+            "mensagem": "Livro cadastrado com sucesso",
+            "livro_id": livro_id
+        }
 
     @staticmethod
     def quantidade_emprestimos_ativos(usuario: Usuario, session=None) -> int:
@@ -244,6 +286,7 @@ class AdministradorService:
             .values(
                 usuario_id=usuario.id,
                 livro_id=livro.id,
+                prazo_dias=prazo_dias,
                 data_emprestimo=emprestimo.data_emprestimo,
                 data_prevista_devolucao=emprestimo.data_prevista_devolucao,
                 data_devolucao=None
