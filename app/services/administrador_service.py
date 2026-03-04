@@ -85,8 +85,23 @@ class AdministradorService:
         return admin
     
     @staticmethod
-    def cadastrar_usuario(nome, email, telefone, endereco, session=None):
+    def cadastrar_usuario(nome, email, telefone, endereco, setor, tipo, session=None):
         session = session or SessionLocal()
+
+        email = email.strip().lower()
+        nome = nome.strip()
+
+        # Validação básica
+        if not nome:
+            raise ValueError("Nome é obrigatório.")
+
+        if not email:
+            raise ValueError("Email é obrigatório.")
+
+        tipos_validos = ["normal", "premium"]
+
+        if tipo not in tipos_validos:
+            raise ValueError(f"Tipo inválido. Permitidos: {', '.join(tipos_validos)}")
 
         # Verifica se já existe usuário
         stmt = select(usuarios_table.c.id).where(
@@ -94,7 +109,7 @@ class AdministradorService:
         )
 
         if session.execute(stmt).first():
-            raise ValueError("Erro: Usuário já cadastrado!")
+            raise ValueError("Usuário já cadastrado!")
 
         # Insere usuário
         stmt = (
@@ -104,50 +119,41 @@ class AdministradorService:
                 email=email,
                 telefone=telefone,
                 endereco=endereco,
+                setor=setor,
+                tipo=tipo,
                 bloqueado=False
             )
             .returning(usuarios_table.c.id)
         )
 
-        result = session.execute(stmt)
-        usuario_id = result.scalar_one()
-
+        usuario_id = session.execute(stmt).scalar_one()
         session.commit()
 
         return {
             "id": usuario_id,
             "nome": nome,
-            "email": email
+            "email": email,
+            "setor": setor,
+            "tipo": tipo
         }
     
     @staticmethod
     def buscar_usuario_por_email(email, session=None, somente_id=False):
         session = session or SessionLocal()
 
-        if somente_id:
-            stmt = select(
-                usuarios_table.c.id,
-                usuarios_table.c.email
-            ).where(usuarios_table.c.email == email)
-        else:
-            stmt = select(usuarios_table).where(
-                usuarios_table.c.email == email
-            )
+        email = email.strip().lower()
 
-        resultado = session.execute(stmt).first()
+        stmt = select(usuarios_table).where(
+            usuarios_table.c.email == email
+        )
 
-        if not resultado:
+        row = session.execute(stmt).mappings().first()
+
+        if not row:
             return None
 
-        row = resultado._mapping
-
         if somente_id:
-            usuario = Usuario(
-                nome="",
-                email=row["email"],
-                telefone="",
-                endereco=""
-            )
+            usuario = Usuario("", row["email"], "", "", "", "")
             usuario.id = row["id"]
             return usuario
 
@@ -155,7 +161,9 @@ class AdministradorService:
             nome=row["nome"],
             email=row["email"],
             telefone=row["telefone"],
-            endereco=row["endereco"]
+            endereco=row["endereco"],
+            setor=row["setor"],
+            tipo=row["tipo"]
         )
 
         usuario.id = row["id"]
@@ -182,7 +190,9 @@ class AdministradorService:
             nome=row["nome"],
             email=row["email"],
             telefone=row["telefone"],
-            endereco=row["endereco"]
+            endereco=row["endereco"],
+            setor=row["setor"],
+            tipo=row["tipo"]
         )
 
         usuario.id = row["id"]
@@ -225,48 +235,7 @@ class AdministradorService:
         session.execute(stmt)
         session.commit()
     
-    @staticmethod
-    def cadastrar_livro(
-        autor: str,
-        titulo: str,
-        editora: str,
-        edicao: str,
-        ano: int,
-        local: str,
-        origem: str,
-        observacao: str,
-        session=None
-    ):
-        session = session or SessionLocal()
-
-        if not autor or not titulo:
-            raise ValueError("Autor e título são obrigatórios")
-
-        stmt = (
-            insert(livros_table)
-            .values(
-                autor=autor,
-                titulo=titulo,
-                editora=editora,
-                edicao=edicao,
-                ano=ano,
-                local=local,
-                origem=origem,
-                observacao=observacao
-            )
-            .returning(livros_table.c.id)
-        )
-
-        result = session.execute(stmt)
-        livro_id = result.scalar_one()
-
-        session.commit()
-
-        return {
-            "mensagem": "Livro cadastrado com sucesso",
-            "livro_id": livro_id
-        }
-
+    
     @staticmethod
     def quantidade_emprestimos_ativos(usuario: Usuario, session=None) -> int:
         session = session or SessionLocal()
@@ -277,39 +246,83 @@ class AdministradorService:
         ).count()
     
     @staticmethod
-    def autorizar_emprestimo(usuario: Usuario, livro: Livro, prazo_dias: int, session=None):
+    def autorizar_emprestimo(
+        usuario: Usuario,
+        autor: str,
+        titulo: str,
+        editora: str,
+        edicao: str,
+        ano: int,
+        local: str,
+        origem: str,
+        observacao: str,
+        prazo_dias: int,
+        session=None
+    ):
         session = session or SessionLocal()
 
-        if usuario.id is None or livro.id is None:
-            raise ValueError("Usuário e livro precisam estar cadastrados no banco")
+        try:
+            if not autor or not titulo:
+                raise ValueError("Autor e título são obrigatórios")
 
-        if usuario.bloqueado:
-            raise ValueError("Usuário bloqueado")
+            if usuario.id is None:
+                raise ValueError("Usuário precisa estar cadastrado")
 
-        if AdministradorService.quantidade_emprestimos_ativos(usuario, session) >= 3:
-            raise ValueError("Usuário atingiu o limite de empréstimos")
+            if usuario.bloqueado:
+                raise ValueError("Usuário bloqueado")
 
-        emprestimo = Emprestimo(usuario, livro, prazo_dias)
+            if usuario.tipo != "premium":
+                if AdministradorService.quantidade_emprestimos_ativos(usuario, session) >= 3:
+                    raise ValueError("Usuário atingiu o limite de empréstimos")
 
-        stmt = (
-            insert(emprestimos_table)
-            .values(
-                usuario_id=usuario.id,
-                livro_id=livro.id,
-                prazo_dias=prazo_dias,
-                data_emprestimo=emprestimo.data_emprestimo,
-                data_prevista_devolucao=emprestimo.data_prevista_devolucao,
-                data_devolucao=None
+            stmt_livro = (
+                insert(livros_table)
+                .values(
+                    autor=autor,
+                    titulo=titulo,
+                    editora=editora,
+                    edicao=edicao,
+                    ano=ano,
+                    local=local,
+                    origem=origem,
+                    observacao=observacao
+                )
+                .returning(livros_table.c.id)
             )
-            .returning(emprestimos_table.c.id)
-        )
 
-        result = session.execute(stmt)
-        emprestimo.id = result.scalar_one()
+            livro_id = session.execute(stmt_livro).scalar_one()
 
-        session.commit()
+            livro = Livro(autor, titulo, editora, edicao, ano, local, origem, observacao)
+            livro.id = livro_id
 
-        return emprestimo
+            emprestimo = Emprestimo(usuario, livro, prazo_dias)
+
+            stmt_emprestimo = (
+                insert(emprestimos_table)
+                .values(
+                    usuario_id=usuario.id,
+                    livro_id=livro.id,
+                    prazo_dias=prazo_dias,
+                    data_emprestimo=emprestimo.data_emprestimo,
+                    data_prevista_devolucao=emprestimo.data_prevista_devolucao,
+                    data_devolucao=None
+                )
+                .returning(emprestimos_table.c.id)
+            )
+
+            emprestimo.id = session.execute(stmt_emprestimo).scalar_one()
+
+            session.commit()
+
+            return {
+                "mensagem": "Livro cadastrado e emprestado com sucesso",
+                "livro_id": livro.id,
+                "emprestimo_id": emprestimo.id
+            }
+
+        except Exception:
+            session.rollback()
+            raise
     
     @staticmethod
     def registrar_devolucao(emprestimo: Emprestimo, session=None):
@@ -334,8 +347,6 @@ class AdministradorService:
             session.execute(stmt_bloqueio)
 
         session.commit()
-
-    from sqlalchemy import select
 
     @staticmethod
     def renovar_emprestimo(emprestimo_id: int, dias: int, session=None):

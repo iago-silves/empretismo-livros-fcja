@@ -5,6 +5,4 @@ class Pessoa(ABC):
         self.nome = nome
         self.email = email
 
-    @abstractmethod
-    def tipo(self):
-        pass
+    

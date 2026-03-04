@@ -1,12 +1,13 @@
 from app.models.pessoa import Pessoa
 
 class Usuario(Pessoa):
-    def __init__(self, nome: str, email: str, telefone: str, endereco: str):
-        self.id: int | None = None
-        super().__init__(nome, email)
+    def __init__(self, nome, email, telefone, endereco, setor, tipo):
+        self.id = None
+        self.nome = nome
+        self.email = email
         self.telefone = telefone
         self.endereco = endereco
+        self.setor = setor
+        self.tipo = tipo
         self.bloqueado = False
 
-    def tipo(self):
-        return "usuario"
