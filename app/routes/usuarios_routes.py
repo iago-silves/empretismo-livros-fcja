@@ -36,6 +36,12 @@ def buscar_usuario(email):
         "bloqueado": usuario.bloqueado
     })
 
+@usuario_bp.route("", methods=["GET"])
+def listar_usuarios():
+    usuarios = AdministradorService.listar_usuarios()
+
+    return jsonify(usuarios), 200
+
 
 @usuario_bp.route("/<email>/bloquear", methods=["PATCH"])
 def bloquear_usuario(email):

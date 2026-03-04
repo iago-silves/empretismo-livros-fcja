@@ -4,6 +4,7 @@ from app.infra.database import SessionLocal
 from sqlalchemy import select, insert, update
 
 from datetime import datetime
+from app.infra.database import get_session
 
 from app.infra.tables.adm_table import administradores_table
 from app.infra.tables.emprestimo_table import emprestimos_table
@@ -188,6 +189,15 @@ class AdministradorService:
         usuario.bloqueado = row["bloqueado"]
 
         return usuario
+    
+    @staticmethod
+    def listar_usuarios():
+        with get_session() as session:
+            stmt = select(usuarios_table)
+            result = session.execute(stmt)
+            usuarios = result.mappings().all()
+
+            return [dict(usuario) for usuario in usuarios]
     
     @staticmethod
     def bloquear_usuario(usuario: Usuario, session=None):

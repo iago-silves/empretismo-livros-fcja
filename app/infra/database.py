@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine, MetaData, event
 from sqlalchemy.orm import sessionmaker
+from contextlib import contextmanager
 
 engine = create_engine(
     "sqlite:///biblioteca.db",
@@ -21,3 +22,15 @@ SessionLocal = sessionmaker(
     autocommit=False,
     future=True
 )
+
+@contextmanager
+def get_session():
+    session = SessionLocal()
+    try:
+        yield session
+        session.commit()
+    except:
+        session.rollback()
+        raise
+    finally:
+        session.close()
