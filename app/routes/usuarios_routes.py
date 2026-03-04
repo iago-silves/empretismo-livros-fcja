@@ -115,3 +115,25 @@ def renovar_emprestimo(id):
 
     except Exception as e:
         return jsonify({"erro": str(e)}), 400
+    
+@usuario_bp.route("/emprestimos", methods=["GET"])
+def listar_emprestimos():
+
+    emprestimos = AdministradorService.listar_emprestimos()
+
+    return jsonify([
+        {
+            "emprestimo_id": e.id,
+            "usuario": e.usuario.email,
+            "livro_id": e.livro.id,
+            "livro": e.livro.titulo,
+            "autor": e.livro.autor,
+            "data_emprestimo": e.data_emprestimo.isoformat(),
+            "data_prevista_devolucao": e.data_prevista_devolucao.isoformat(),
+            "data_devolucao": (
+                e.data_devolucao.isoformat()
+                if e.data_devolucao else None
+            )
+        }
+        for e in emprestimos
+    ])
