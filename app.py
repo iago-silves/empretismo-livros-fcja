@@ -2,7 +2,7 @@ from flask import Flask
 from app.routes.auth_routes import auth_bp
 from app.routes.admin_routes import admin_bp
 from app.routes.usuarios_routes import usuario_bp
-
+from app.routes.livros_routes import livro_bp
 
 def create_app():
     app = Flask(__name__)
@@ -10,6 +10,7 @@ def create_app():
     app.register_blueprint(auth_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(usuario_bp)
+    app.register_blueprint(livro_bp)
 
     return app
 

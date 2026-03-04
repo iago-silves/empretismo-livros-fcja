@@ -4,6 +4,7 @@ from app.infra.database import SessionLocal
 from sqlalchemy import select, insert, update
 
 from datetime import datetime
+from app.infra.database import get_session
 
 from app.infra.tables.adm_table import administradores_table
 from app.infra.tables.emprestimo_table import emprestimos_table
@@ -190,6 +191,15 @@ class AdministradorService:
         return usuario
     
     @staticmethod
+    def listar_usuarios():
+        with get_session() as session:
+            stmt = select(usuarios_table)
+            result = session.execute(stmt)
+            usuarios = result.mappings().all()
+
+            return [dict(usuario) for usuario in usuarios]
+    
+    @staticmethod
     def bloquear_usuario(usuario: Usuario, session=None):
         session = session or SessionLocal()
 
@@ -214,6 +224,48 @@ class AdministradorService:
 
         session.execute(stmt)
         session.commit()
+    
+    @staticmethod
+    def cadastrar_livro(
+        autor: str,
+        titulo: str,
+        editora: str,
+        edicao: str,
+        ano: int,
+        local: str,
+        origem: str,
+        observacao: str,
+        session=None
+    ):
+        session = session or SessionLocal()
+
+        if not autor or not titulo:
+            raise ValueError("Autor e título são obrigatórios")
+
+        stmt = (
+            insert(livros_table)
+            .values(
+                autor=autor,
+                titulo=titulo,
+                editora=editora,
+                edicao=edicao,
+                ano=ano,
+                local=local,
+                origem=origem,
+                observacao=observacao
+            )
+            .returning(livros_table.c.id)
+        )
+
+        result = session.execute(stmt)
+        livro_id = result.scalar_one()
+
+        session.commit()
+
+        return {
+            "mensagem": "Livro cadastrado com sucesso",
+            "livro_id": livro_id
+        }
 
     @staticmethod
     def quantidade_emprestimos_ativos(usuario: Usuario, session=None) -> int:
@@ -244,6 +296,7 @@ class AdministradorService:
             .values(
                 usuario_id=usuario.id,
                 livro_id=livro.id,
+                prazo_dias=prazo_dias,
                 data_emprestimo=emprestimo.data_emprestimo,
                 data_prevista_devolucao=emprestimo.data_prevista_devolucao,
                 data_devolucao=None
@@ -282,21 +335,36 @@ class AdministradorService:
 
         session.commit()
 
+    from sqlalchemy import select
+
     @staticmethod
-    def renovar_emprestimo(emprestimo: Emprestimo, dias: int, session=None):
+    def renovar_emprestimo(emprestimo_id: int, dias: int, session=None):
         session = session or SessionLocal()
+
+        # Busca direto como mapeamento
+        row = session.execute(
+            select(emprestimos_table)
+            .where(emprestimos_table.c.id == emprestimo_id)
+        ).mappings().first()
+
+        if not row:
+            raise ValueError("Empréstimo não encontrado.")
+
+        emprestimo = Emprestimo.__new__(Emprestimo)  
+        emprestimo.__dict__.update(row)
 
         emprestimo.renovar(dias)
 
-        stmt = (
+        session.execute(
             update(emprestimos_table)
-            .where(emprestimos_table.c.id == emprestimo.id)
+            .where(emprestimos_table.c.id == emprestimo_id)
             .values(
-                data_prevista_devolucao=emprestimo.data_prevista_devolucao
+                data_prevista_devolucao=emprestimo.data_prevista_devolucao,
+                renovacoes=emprestimo.renovacoes,
+                exige_presenca_fisica=emprestimo.exige_presenca_fisica
             )
         )
 
-        session.execute(stmt)
         session.commit()
 
     @staticmethod
@@ -325,7 +393,7 @@ class AdministradorService:
         if not usuario or not livro:
             return None
 
-        emprestimo = Emprestimo(usuario, livro, prazo_dias=0)
+        emprestimo = Emprestimo(usuario, livro, row["livro_id"])
 
         emprestimo.id = row["id"]
         emprestimo.data_emprestimo = row["data_emprestimo"]
