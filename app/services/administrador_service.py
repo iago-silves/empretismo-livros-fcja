@@ -442,4 +442,37 @@ class AdministradorService:
         livro.id = row["id"]
 
         return livro
-        
+    
+    @staticmethod
+    def listar_emprestimos(session=None):
+        session = session or SessionLocal()
+
+        stmt = select(emprestimos_table)
+        results = session.execute(stmt).all()
+
+        emprestimos = []
+
+        for result in results:
+            row = result._mapping
+
+            usuario = AdministradorService.buscar_usuario_por_id(
+                row["usuario_id"], session
+            )
+
+            livro = AdministradorService.buscar_livro_por_id(
+                row["livro_id"], session
+            )
+
+            if not usuario or not livro:
+                continue
+
+            emprestimo = Emprestimo(usuario, livro, row["prazo_dias"])
+
+            emprestimo.id = row["id"]
+            emprestimo.data_emprestimo = row["data_emprestimo"]
+            emprestimo.data_prevista_devolucao = row["data_prevista_devolucao"]
+            emprestimo.data_devolucao = row["data_devolucao"]
+
+            emprestimos.append(emprestimo)
+
+        return emprestimos
