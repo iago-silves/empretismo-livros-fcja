@@ -9,5 +9,7 @@ usuarios_table = Table(
     Column("email", String(120), nullable=False, unique=True),
     Column("telefone", String(20), nullable=False),
     Column("endereco", String(200), nullable=False),
+    Column("setor", String(100), nullable=False),
+    Column("tipo", String(50), nullable=False),
     Column("bloqueado", Boolean, nullable=False, default=False),
 )

@@ -12,7 +12,9 @@ def cadastrar_usuario():
             nome=data["nome"],
             email=data["email"],
             telefone=data["telefone"],
-            endereco=data["endereco"]
+            endereco=data["endereco"],
+            setor=data["setor"],
+            tipo= data["tipo"]
         )
         return jsonify(resultado), 201
 
@@ -33,6 +35,8 @@ def buscar_usuario(email):
         "email": usuario.email,
         "telefone": usuario.telefone,
         "endereco": usuario.endereco,
+        "setor": usuario.setor,
+        "tipo": usuario.tipo,
         "bloqueado": usuario.bloqueado
     })
 
@@ -80,41 +84,6 @@ def emprestimos_ativos(email):
         "usuario": usuario.email,
         "emprestimos_ativos": quantidade
     })
-
-@usuario_bp.route("/<email>/emprestimos", methods=["POST"])
-def autorizar_emprestimo(email):
-    data = request.get_json()
-
-    try:
-        usuario = AdministradorService.buscar_usuario_por_email(email)
-        if not usuario:
-            return jsonify({"erro": "Usuário não encontrado"}), 404
-
-        livro = AdministradorService.buscar_livro_por_id(
-            data["livro_id"]
-        )
-
-        if not livro:
-            return jsonify({"erro": "Livro não encontrado"}), 404
-
-        emprestimo = AdministradorService.autorizar_emprestimo(
-            usuario,
-            livro,
-            data["prazo_dias"]
-        )
-
-        return jsonify({
-            "emprestimo_id": emprestimo.id,
-            "usuario_id": usuario.id,
-            "livro_id": livro.id,
-            "data_emprestimo": str(emprestimo.data_emprestimo),
-            "data_prevista_devolucao": str(
-                emprestimo.data_prevista_devolucao
-            )
-        }), 201
-
-    except ValueError as e:
-        return jsonify({"erro": str(e)}), 400
 
 
 @usuario_bp.route("/emprestimos/<int:emprestimo_id>/devolucao", methods=["PATCH"])

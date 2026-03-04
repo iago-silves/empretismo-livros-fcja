@@ -27,7 +27,3 @@ class Administrador(Pessoa):
 
     def ativar(self):
         self.ativo = True
-
-    @property
-    def tipo(self):
-        return "administrador"
