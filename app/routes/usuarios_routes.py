@@ -132,24 +132,17 @@ def registrar_devolucao(emprestimo_id):
     return jsonify({"mensagem": "Devolução registrada"})
 
 
-@usuario_bp.route("/emprestimos/<int:emprestimo_id>/renovar", methods=["PATCH"])
-def renovar_emprestimo(emprestimo_id):
-    data = request.get_json()
-
+@usuario_bp.route("/emprestimos/<int:id>/renovar", methods=["PATCH"])
+def renovar_emprestimo(id):
     try:
-        emprestimo = AdministradorService.buscar_emprestimo_por_id(
-            emprestimo_id
-        )
+        dias = request.json.get("dias", 7)
 
-        if not emprestimo:
-            return jsonify({"erro": "Empréstimo não encontrado"}), 404
+        AdministradorService.renovar_emprestimo(id, dias)
 
-        AdministradorService.renovar_emprestimo(
-            emprestimo,
-            data["dias"]
-        )
-
-        return jsonify({"mensagem": "Empréstimo renovado"})
+        return jsonify({"mensagem": "Empréstimo renovado com sucesso"}), 200
 
     except ValueError as e:
+        return jsonify({"erro": str(e)}), 400
+
+    except Exception as e:
         return jsonify({"erro": str(e)}), 400

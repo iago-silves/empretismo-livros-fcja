@@ -335,21 +335,36 @@ class AdministradorService:
 
         session.commit()
 
+    from sqlalchemy import select
+
     @staticmethod
-    def renovar_emprestimo(emprestimo: Emprestimo, dias: int, session=None):
+    def renovar_emprestimo(emprestimo_id: int, dias: int, session=None):
         session = session or SessionLocal()
+
+        # Busca direto como mapeamento
+        row = session.execute(
+            select(emprestimos_table)
+            .where(emprestimos_table.c.id == emprestimo_id)
+        ).mappings().first()
+
+        if not row:
+            raise ValueError("Empréstimo não encontrado.")
+
+        emprestimo = Emprestimo.__new__(Emprestimo)  
+        emprestimo.__dict__.update(row)
 
         emprestimo.renovar(dias)
 
-        stmt = (
+        session.execute(
             update(emprestimos_table)
-            .where(emprestimos_table.c.id == emprestimo.id)
+            .where(emprestimos_table.c.id == emprestimo_id)
             .values(
-                data_prevista_devolucao=emprestimo.data_prevista_devolucao
+                data_prevista_devolucao=emprestimo.data_prevista_devolucao,
+                renovacoes=emprestimo.renovacoes,
+                exige_presenca_fisica=emprestimo.exige_presenca_fisica
             )
         )
 
-        session.execute(stmt)
         session.commit()
 
     @staticmethod
@@ -378,7 +393,7 @@ class AdministradorService:
         if not usuario or not livro:
             return None
 
-        emprestimo = Emprestimo(usuario, livro, prazo_dias=0)
+        emprestimo = Emprestimo(usuario, livro, row["livro_id"])
 
         emprestimo.id = row["id"]
         emprestimo.data_emprestimo = row["data_emprestimo"]
