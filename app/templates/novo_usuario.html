@@ -2,11 +2,7 @@
 content %}
 
 <div class="page-container">
-  <form
-    class="form-usuario"
-    method="POST"
-    action="{{ url_for('cadastrar_usuario') }}"
-  >
+  <form class="form-usuario" id="formUsuario">
     <div class="page-header">
       <h1>Novo Usuário</h1>
 
@@ -14,7 +10,7 @@ content %}
         <button
           type="button"
           class="btn dark"
-          onclick="window.location.href='{{ url_for('listagem_usuarios') }}'"
+          onclick="window.location.href = '/usuarios/pagina'"
         >
           Cancelar
         </button>
@@ -63,5 +59,8 @@ content %}
     </div>
   </form>
 </div>
+
+<!-- Importa o JS da API -->
+<script src="{{ url_for('static', filename='js/usuarios.js') }}"></script>
 
 {% endblock %}

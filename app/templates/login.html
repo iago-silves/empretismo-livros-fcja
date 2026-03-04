@@ -1,19 +1,24 @@
-{% extends "base.html" %} {% block title %}Login | Biblioteca Durmeval Trigueiro
-Mendes{% endblock %} {% block content %}
+{% extends "base.html" %} {% block title %}Login Administrador{% endblock %} {%
+block content %}
 
-<main class="login-container">
-  <div class="login-card">
-    <h3>Login</h3>
+<div class="login-container">
+  <form id="formLogin" class="login-form">
+    <h2>Login Administrador</h2>
 
-    <form method="POST" action="{{ url_for('login') }}">
-      <input type="email" name="email" placeholder="E-mail" required />
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" name="email" required />
+    </div>
 
-      <input type="password" name="senha" placeholder="Senha" required />
+    <div class="form-group">
+      <label>Senha</label>
+      <input type="password" name="senha" required />
+    </div>
 
-      <a href="#" class="forgot-password">Esqueci minha senha</a>
+    <button type="submit" class="btn">Entrar</button>
+  </form>
+</div>
 
-      <button type="submit">Entrar</button>
-    </form>
-  </div>
-</main>
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+
 {% endblock %}
