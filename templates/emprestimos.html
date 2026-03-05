@@ -1,0 +1,40 @@
+{% extends "base.html" %} {% block title %}Empréstimos{% endblock %} {% block
+content %}
+
+<div class="page-container">
+  <div class="page-header">
+    <h1>Empréstimos</h1>
+
+    <div class="header-buttons">
+      <button
+        class="btn medium"
+        onclick="window.location.href = '/emprestimos/novo'"
+      >
+        Novo Empréstimo
+      </button>
+    </div>
+  </div>
+
+  <table class="table" id="tabelaEmprestimos">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Usuário</th>
+        <th>Livro</th>
+        <th>Data</th>
+        <th>Prazo</th>
+        <th>Status</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td colspan="7">Carregando empréstimos...</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<script src="{{ url_for('static', filename='js/listagem_emprestimos.js') }}"></script>
+
+{% endblock %}

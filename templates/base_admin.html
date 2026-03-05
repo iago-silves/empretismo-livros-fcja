@@ -27,19 +27,19 @@
 
     <nav class="navbar">
       <a
-        href="{{ url_for('emprestimos') }}"
+        href="{{ url_for('usuario.listar_emprestimos') }}"
         class="{% if active_page == 'emprestimos' %}active{% endif %}"
       >
         Empréstimos
       </a>
       <a
-        href="{{ url_for('cadastro_usuario') }}"
+        href="{{ url_for('usuario.cadastrar_usuario') }}"
         class="{% if active_page == 'cadastro_usuario' %}active{% endif %}"
       >
         Cadastro de Usuário
       </a>
       <a
-        href="{{ url_for('usuarios') }}"
+        href="{{ url_for('usuario.listar_usuarios') }}"
         class="{% if active_page == 'usuarios' %}active{% endif %}"
       >
         Listagem de Usuários

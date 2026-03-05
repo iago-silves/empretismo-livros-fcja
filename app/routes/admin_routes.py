@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from app.services.administrador_service import AdministradorService
 
-admin_bp = Blueprint("admin", __name__)
+admin_bp = Blueprint("admin", __name__, url_prefix="/adm")
 
 @admin_bp.route("/cadastro/admin", methods=["POST"])
 def cadastrar_admin():

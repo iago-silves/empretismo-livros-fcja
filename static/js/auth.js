@@ -1,16 +1,15 @@
 document
-  .getElementById("formCadastroAdmin")
+  .getElementById("formLogin")
   .addEventListener("submit", async function (event) {
     event.preventDefault();
 
     const dados = {
-      nome: document.querySelector("[name='nome']").value,
       email: document.querySelector("[name='email']").value,
       senha: document.querySelector("[name='senha']").value,
     };
 
     try {
-      const resposta = await fetch("/cadastro/admin", {
+      const resposta = await fetch("/login/adm", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -21,8 +20,10 @@ document
       const resultado = await resposta.json();
 
       if (resposta.ok) {
-        alert("Administrador cadastrado com sucesso!");
-        window.location.href = "/login.html";
+        alert("Login realizado com sucesso!");
+
+        // Aqui você decide para onde ir após login
+        window.location.href = "/usuarios";
       } else {
         alert(resultado.erro);
       }
